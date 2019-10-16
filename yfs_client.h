@@ -12,7 +12,7 @@ class yfs_client {
  public:
 
   typedef unsigned long long inum;
-  enum xxstatus { OK, RPCERR, NOENT, IOERR, EXIST };
+  enum xxstatus { OK, RPCERR, NOENT, IOERR, EXIST, CREERR, WRTERR, READERR };
   typedef int status;
 
   struct fileinfo {
@@ -30,16 +30,30 @@ class yfs_client {
     std::string name;
     yfs_client::inum inum;
   };
+  class directory {
+    private:
+      std::string dir_string;
+      std::list<yfs_client::dirent> dir;
+    public:
+      directory(std::string);
+      yfs_client::inum find(std::string);
+      void getdir(std::list<dirent> &);
+      void addent(yfs_client::dirent);
+      void delent(std::string);
+      std::string tostring();
+  };
 
  private:
-  static std::string filename(inum);
-  static inum n2i(std::string);
+  std::string filename(inum);
+  inum n2i(std::string);
+  inum finddir(std::string, std::string);
 
  public:
   yfs_client();
   yfs_client(std::string, std::string);
 
   bool isfile(inum);
+  bool islink(inum);
   bool isdir(inum);
 
   int getfile(inum, fileinfo &);
@@ -55,6 +69,8 @@ class yfs_client {
   int mkdir(inum , const char *, mode_t , inum &);
   
   /** you may need to add symbolic link related methods here.*/
+  int symlink(inum, const char*, const char*, inum &);
+  int readlink(inum, std::string &);
 };
 
 #endif 
