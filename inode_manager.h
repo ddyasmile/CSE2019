@@ -26,6 +26,9 @@ class disk {
 
 // block layer -----------------------------------------
 
+#define INODE 0
+#define DATA 1
+
 typedef struct superblock {
   uint32_t size;
   uint32_t nblocks;
@@ -40,7 +43,7 @@ class block_manager {
   block_manager();
   struct superblock sb;
 
-  uint32_t alloc_block();
+  uint32_t alloc_block(uint32_t type);
   void free_block(uint32_t id);
   void read_block(uint32_t id, char *buf);
   void write_block(uint32_t id, const char *buf);
@@ -48,7 +51,7 @@ class block_manager {
 
 // inode layer -----------------------------------------
 
-#define INODE_NUM  1024
+#define INODE_NUM  4096
 
 // Inodes per block.
 #define IPB           1
@@ -62,10 +65,17 @@ class block_manager {
 
 // Block containing bit for block b
 #define BBLOCK(b) ((b)/BPB + 2)
+#define BBLOCK_INDEX(b) (b)%BPB
+
+//index means BBLOCK_INDEX
+#define CHECK(p, index) ((*(p+index/8)) >> (8-index%8-1)) & 0x1
 
 #define NDIRECT 100
 #define NINDIRECT (BLOCK_SIZE / sizeof(uint))
 #define MAXFILE (NDIRECT + NINDIRECT)
+
+#define INODE_START IBLOCK(1, BLOCK_NUM)
+#define DATA_START (INODE_START + INODE_NUM)
 
 typedef struct inode {
   short type;
