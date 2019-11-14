@@ -6,6 +6,7 @@ handle_mgr mgr;
 
 handle::handle(std::string m) 
 {
+  //tprintf("handle");
   h = mgr.get_handle(m);
 }
 
@@ -22,18 +23,18 @@ handle::safebind()
   sockaddr_in dstsock;
   make_sockaddr(h->m.c_str(), &dstsock);
   rpcc *cl = new rpcc(dstsock);
-  tprintf("handler_mgr::get_handle trying to bind...%s\n", h->m.c_str());
+  //tprintf("handler_mgr::get_handle trying to bind...%s\n", h->m.c_str());
   int ret;
   if (cl->islossy())
         ret = cl->bind();
   else
         ret = cl->bind(rpcc::to(1000));
   if (ret < 0) {
-    tprintf("handle_mgr::get_handle bind failure! %s %d\n", h->m.c_str(), ret);
+    //tprintf("handle_mgr::get_handle bind failure! %s %d\n", h->m.c_str(), ret);
     delete cl;
     h->del = true;
   } else {
-    tprintf("handle_mgr::get_handle bind succeeded %s\n", h->m.c_str());
+    //tprintf("handle_mgr::get_handle bind succeeded %s\n", h->m.c_str());
     h->cl = cl;
   }
   return h->cl;
@@ -52,7 +53,9 @@ handle_mgr::handle_mgr()
 struct hinfo *
 handle_mgr::get_handle(std::string m)
 {
+  //tprintf("get_handle");
   ScopedLock ml(&handle_mutex);
+  //tprintf("scopedlock");
   struct hinfo *h = 0;
   if (hmap.find(m) == hmap.end()) {
     h = new hinfo;
@@ -90,10 +93,10 @@ void
 handle_mgr::delete_handle_wo(std::string m)
 {
   if (hmap.find(m) == hmap.end()) {
-    tprintf("handle_mgr::delete_handle_wo: cl %s isn't in cl list\n", m.c_str());
+    //tprintf("handle_mgr::delete_handle_wo: cl %s isn't in cl list\n", m.c_str());
   } else {
-    tprintf("handle_mgr::delete_handle_wo: cl %s refcnt %d\n", m.c_str(),
-	   hmap[m]->refcnt);
+    //tprintf("handle_mgr::delete_handle_wo: cl %s refcnt %d\n", m.c_str(),
+	  // hmap[m]->refcnt);
     struct hinfo *h = hmap[m];
     if (h->refcnt == 0) {
       if (h->cl) {

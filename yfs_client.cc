@@ -13,7 +13,7 @@
 yfs_client::yfs_client(std::string extent_dst, std::string lock_dst)
 {
   ec = new extent_client(extent_dst);
-  lc = new lock_client(lock_dst);
+  lc = new lock_client_cache(lock_dst);
   if (ec->put(1, "") != extent_protocol::OK)
       printf("error init root dir\n"); // XYB: init root dir
 }
@@ -538,6 +538,7 @@ yfs_client::symlink(inum parent, const char *link, const char *name, inum &ino_o
     std::string name_str = name, link_str = link;
     inum create_flag = 0;
 
+    printf("symlink test\n");
     lc->acquire(create_flag);
     lc->acquire(parent);
 
