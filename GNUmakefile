@@ -133,12 +133,14 @@ clean_files=rpc/rpctest rpc/*.o rpc/*.d *.o *.d yfs_client extent_server lock_se
 clean: 
 	rm $(clean_files) -rf 
 
-handin_ignore=$(clean_files) core* *log
+handin_ignore=$(clean_files) core* *log .git/* .vscode/* *tgz
 handin_file=lab$(LAB).tgz
 labdir=$(shell basename $(PWD))
 handin: 
-	@bash -c "cd ../; tar -X <(tr ' ' '\n' < <(echo '$(handin_ignore)')) -czvf $(handin_file) $(labdir); mv $(handin_file) $(labdir); cd $(labdir)"
+	@bash -c "make clean; cd ../; tar -X <(tr ' ' '\n' < <(echo '$(handin_ignore)')) -czvf $(handin_file) $(labdir); mv $(handin_file) $(labdir); cd $(labdir)"
+
 	@echo Please modify lab3.tgz to lab3_[your student id].tgz and upload it to ftp://LuXuKun:public@public.sjtu.edu.cn/upload/cse/lab3
+
 	@echo Thanks!
 
 rpcdemo: demo_server demo_client
