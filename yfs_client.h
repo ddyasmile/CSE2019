@@ -1,18 +1,21 @@
 #ifndef yfs_client_h
 #define yfs_client_h
 
-#include <string>
-
 #include "lock_protocol.h"
 #include "lock_client.h"
 #include "lock_client_cache.h"
 
 //#include "yfs_protocol.h"
 #include "extent_client.h"
+#include "extent_server.h"
+
+#include <map>
+#include <string>
 #include <vector>
 
 
 class yfs_client {
+  extent_server *es;
   extent_client *ec;
   lock_client_cache *lc;
  public:
@@ -50,6 +53,10 @@ class yfs_client {
   };
 
  private:
+  std::map<inum, bool> cache_map;
+  bool cache_miss(inum);
+  bool write_through(inum);
+
   std::string filename(inum);
   inum n2i(std::string);
   inum finddir(std::string, std::string);
