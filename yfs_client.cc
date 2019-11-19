@@ -12,8 +12,6 @@
 
 yfs_client::yfs_client(std::string extent_dst, std::string lock_dst)
 {
-  cache_map.clear();
-  es = new extent_server();
   ec = new extent_client(extent_dst);
   lc = new lock_client_cache(lock_dst);
   if (ec->put(1, "") != extent_protocol::OK)
@@ -679,16 +677,3 @@ yfs_client::directory::tostring()
 {
     return dir_string;
 }
-
-bool
-yfs_client::cache_miss(inum finum)
-{
-  return true;
-}
-
-bool
-yfs_client::write_through(inum finum)
-{
-  return true;
-}
-
