@@ -33,6 +33,17 @@ class extent_protocol {
   };
 };
 
+class rextent_protocol {
+  public:
+    enum xxstatus { OK, RPCERR };
+    typedef int status;
+    enum rpc_numbers {
+      flush = 0x9001,
+      get_attr,
+      flush_rm
+    };
+};
+
 inline unmarshall &
 operator>>(unmarshall &u, extent_protocol::attr &a)
 {
