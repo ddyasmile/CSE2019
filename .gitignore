@@ -1,6 +1,12 @@
 *.o
 *.d
+*.tgz
+*.
+*.html
+part1_tester
 lab1_tester
 *.log
 foo.txt.yfs*
 tmprand
+
+.vscode
